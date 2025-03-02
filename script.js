@@ -1,11 +1,11 @@
 // Initial favorites data
 let favorites = [
-    { id: 1, title: 'Google', url: 'https://google.com' },
-    { id: 2, title: 'YouTube', url: 'https://youtube.com' },
-    { id: 3, title: 'Facebook', url: 'https://facebook.com' },
-    { id: 4, title: 'Twitter', url: 'https://twitter.com' },
-    { id: 5, title: 'Instagram', url: 'https://instagram.com' },
-    { id: 6, title: 'LinkedIn', url: 'https://linkedin.com' }
+    { id: 1, title: 'Google', url: 'https://google.com', iconType: 'default', iconData: null },
+    { id: 2, title: 'YouTube', url: 'https://youtube.com', iconType: 'default', iconData: null },
+    { id: 3, title: 'Facebook', url: 'https://facebook.com', iconType: 'default', iconData: null },
+    { id: 4, title: 'Twitter', url: 'https://twitter.com', iconType: 'default', iconData: null },
+    { id: 5, title: 'Instagram', url: 'https://instagram.com', iconType: 'default', iconData: null },
+    { id: 6, title: 'LinkedIn', url: 'https://linkedin.com', iconType: 'default', iconData: null }
 ];
 
 // DOM elements
@@ -23,9 +23,21 @@ const modalCancel = document.getElementById('modal-cancel');
 const modalSave = document.getElementById('modal-save');
 const searchInput = document.querySelector('.search-box input');
 
+// New icon-related DOM elements
+const defaultIcon = document.getElementById('default-icon');
+const defaultIconLetter = document.getElementById('default-icon-letter');
+const customIconInput = document.getElementById('custom-icon');
+const customIconPreview = document.getElementById('custom-icon-preview');
+const customIconPreviewImg = document.getElementById('icon-preview-img');
+const iconUrlInput = document.getElementById('icon-url');
+const urlIconPreview = document.getElementById('url-icon-preview');
+const urlIconImg = document.getElementById('url-icon-img');
+
 // Variables for editing
 let editingFavoriteId = null;
 let draggedItem = null;
+let currentIconType = 'default';
+let currentIconData = null;
 
 // Update clock
 function updateClock() {
@@ -54,6 +66,25 @@ function saveFavorites() {
     localStorage.setItem('favorites', JSON.stringify(favorites));
 }
 
+// Create icon based on type and data
+function createIconElement(favorite) {
+    const iconContainer = document.createElement('div');
+    iconContainer.className = 'favorite-icon';
+    
+    if (favorite.iconType === 'default' || !favorite.iconType) {
+        // Default letter icon
+        iconContainer.textContent = favorite.title.charAt(0);
+    } else if (favorite.iconType === 'custom' || favorite.iconType === 'url') {
+        // Custom icon from file or URL
+        const img = document.createElement('img');
+        img.src = favorite.iconData;
+        iconContainer.innerHTML = '';
+        iconContainer.appendChild(img);
+    }
+    
+    return iconContainer;
+}
+
 // Render favorites
 function renderFavorites() {
     favoritesContainer.innerHTML = '';
@@ -64,14 +95,18 @@ function renderFavorites() {
         favoriteElement.setAttribute('draggable', 'true');
         favoriteElement.setAttribute('data-id', favorite.id);
         
+        const iconElement = createIconElement(favorite);
+        
         favoriteElement.innerHTML = `
-            <div class="favorite-icon">${favorite.title.charAt(0)}</div>
-            <div class="favorite-title">${favorite.title}</div>
             <div class="controls">
                 <button class="control-btn edit" onclick="editFavorite(${favorite.id})">✏️</button>
                 <button class="control-btn delete" onclick="deleteFavorite(${favorite.id})">❌</button>
             </div>
+            <div class="favorite-title">${favorite.title}</div>
         `;
+        
+        // Insert the icon at the beginning
+        favoriteElement.insertBefore(iconElement, favoriteElement.firstChild);
         
         favoriteElement.addEventListener('click', (e) => {
             if (!e.target.closest('.controls')) {
@@ -137,12 +172,36 @@ function handleDragEnd(e) {
     this.style.opacity = '1';
 }
 
+// Reset icon selection in modal
+function resetIconSelection() {
+    // Reset active state
+    defaultIcon.classList.add('active');
+    customIconPreview.classList.remove('active');
+    urlIconPreview.classList.remove('active');
+    
+    // Reset previews
+    defaultIconLetter.textContent = 'A';
+    customIconPreviewImg.style.display = 'none';
+    urlIconImg.style.display = 'none';
+    
+    // Reset inputs
+    customIconInput.value = '';
+    iconUrlInput.value = '';
+    
+    // Reset current selection
+    currentIconType = 'default';
+    currentIconData = null;
+}
+
 // Add a new favorite
 function showAddModal() {
     modalTitle.textContent = 'Добавить закладку';
     favoriteTitleInput.value = '';
     favoriteUrlInput.value = '';
     editingFavoriteId = null;
+    
+    resetIconSelection();
+    
     editModal.classList.add('active');
 }
 
@@ -154,6 +213,31 @@ function editFavorite(id) {
         favoriteTitleInput.value = favorite.title;
         favoriteUrlInput.value = favorite.url;
         editingFavoriteId = id;
+        
+        // Set icon type and preview
+        resetIconSelection();
+        
+        if (favorite.iconType === 'default' || !favorite.iconType) {
+            defaultIcon.classList.add('active');
+            defaultIconLetter.textContent = favorite.title.charAt(0);
+            currentIconType = 'default';
+        } else if (favorite.iconType === 'custom') {
+            defaultIcon.classList.remove('active');
+            customIconPreview.classList.add('active');
+            customIconPreviewImg.src = favorite.iconData;
+            customIconPreviewImg.style.display = 'block';
+            currentIconType = 'custom';
+            currentIconData = favorite.iconData;
+        } else if (favorite.iconType === 'url') {
+            defaultIcon.classList.remove('active');
+            urlIconPreview.classList.add('active');
+            urlIconImg.src = favorite.iconData;
+            urlIconImg.style.display = 'block';
+            iconUrlInput.value = favorite.iconData;
+            currentIconType = 'url';
+            currentIconData = favorite.iconData;
+        }
+        
         editModal.classList.add('active');
     }
 }
@@ -180,23 +264,98 @@ function saveFavorite() {
         url = 'https://' + url;
     }
     
+    const favoriteData = {
+        title,
+        url,
+        iconType: currentIconType,
+        iconData: currentIconData
+    };
+    
+    if (currentIconType === 'default') {
+        favoriteData.iconData = null;
+    }
+    
     if (editingFavoriteId) {
         // Update existing favorite
         const index = favorites.findIndex(f => f.id === editingFavoriteId);
         if (index !== -1) {
-            favorites[index].title = title;
-            favorites[index].url = url;
+            favoriteData.id = editingFavoriteId;
+            favorites[index] = favoriteData;
         }
     } else {
         // Add new favorite
         const newId = favorites.length > 0 ? Math.max(...favorites.map(f => f.id)) + 1 : 1;
-        favorites.push({ id: newId, title, url });
+        favoriteData.id = newId;
+        favorites.push(favoriteData);
     }
     
     saveFavorites();
     renderFavorites();
     editModal.classList.remove('active');
 }
+
+// Icon selection handlers
+defaultIcon.addEventListener('click', () => {
+    defaultIcon.classList.add('active');
+    customIconPreview.classList.remove('active');
+    urlIconPreview.classList.remove('active');
+    currentIconType = 'default';
+    currentIconData = null;
+    
+    // Update letter preview
+    const title = favoriteTitleInput.value.trim();
+    defaultIconLetter.textContent = title ? title.charAt(0) : 'A';
+});
+
+// Update default icon letter when title changes
+favoriteTitleInput.addEventListener('input', () => {
+    if (currentIconType === 'default') {
+        const title = favoriteTitleInput.value.trim();
+        defaultIconLetter.textContent = title ? title.charAt(0) : 'A';
+    }
+});
+
+// Custom icon file handler
+customIconInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            customIconPreviewImg.src = e.target.result;
+            customIconPreviewImg.style.display = 'block';
+            
+            defaultIcon.classList.remove('active');
+            customIconPreview.classList.add('active');
+            urlIconPreview.classList.remove('active');
+            
+            currentIconType = 'custom';
+            currentIconData = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// URL icon handler
+iconUrlInput.addEventListener('change', () => {
+    const url = iconUrlInput.value.trim();
+    if (url) {
+        urlIconImg.src = url;
+        urlIconImg.style.display = 'block';
+        
+        defaultIcon.classList.remove('active');
+        customIconPreview.classList.remove('active');
+        urlIconPreview.classList.add('active');
+        
+        currentIconType = 'url';
+        currentIconData = url;
+        
+        // Handle error for URL images
+        urlIconImg.onerror = function() {
+            alert('Не удалось загрузить изображение по указанному URL');
+            urlIconImg.style.display = 'none';
+        };
+    }
+});
 
 // Settings functionality
 settingsBtn.addEventListener('click', () => {

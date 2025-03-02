@@ -41,6 +41,36 @@
                 <label>URL:</label>
                 <input type="text" id="favorite-url" placeholder="Например: https://google.com">
             </div>
+            
+            <!-- New Icon Options Section -->
+            <div class="icon-options">
+                <label>Иконка:</label>
+                <div class="icon-option">
+                    <div class="icon-group">
+                        <div class="icon-preview active" id="default-icon">
+                            <span id="default-icon-letter">G</span>
+                        </div>
+                        <span>Буква по умолчанию</span>
+                    </div>
+                </div>
+                <div class="icon-option">
+                    <div class="icon-group">
+                        <div class="icon-preview" id="custom-icon-preview">
+                            <img id="icon-preview-img" src="" style="display: none;">
+                        </div>
+                        <input type="file" id="custom-icon" accept="image/*">
+                    </div>
+                </div>
+                <div class="icon-option">
+                    <div class="icon-group">
+                        <div class="icon-preview" id="url-icon-preview">
+                            <img id="url-icon-img" src="" style="display: none;">
+                        </div>
+                        <input type="text" id="icon-url" placeholder="URL изображения для иконки">
+                    </div>
+                </div>
+            </div>
+            
             <div class="modal-buttons">
                 <button class="modal-btn cancel" id="modal-cancel">Отмена</button>
                 <button class="modal-btn save" id="modal-save">Сохранить</button>

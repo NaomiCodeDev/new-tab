@@ -53,15 +53,14 @@ body {
 
 .favorites {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Increased width */
     gap: 20px;
     width: 90%;
     max-width: 800px;
 }
 
 .favorite-item {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
+    background: white; /* Changed to white */
     border-radius: 10px;
     padding: 15px;
     display: flex;
@@ -69,42 +68,51 @@ body {
     align-items: center;
     cursor: pointer;
     position: relative;
-    transition: transform 0.2s, background 0.2s;
-    height: 100px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 120px; /* Increased height */
     user-select: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .favorite-item:hover {
-    background: rgba(255, 255, 255, 0.3);
     transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .favorite-icon {
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.8);
+    width: 48px; /* Increased size */
+    height: 48px; /* Increased size */
+    background: #f1f1f1;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-weight: bold;
     color: #333;
+    overflow: hidden;
+}
+
+.favorite-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .favorite-title {
-    font-size: 0.9rem;
+    font-size: 1rem;
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
+    color: #333; /* Text color for white background */
 }
 
 .controls {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 5px;
+    right: 5px;
     display: none;
 }
 
@@ -115,8 +123,8 @@ body {
 .control-btn {
     width: 24px;
     height: 24px;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -124,6 +132,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.control-btn:hover {
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .settings {
@@ -185,20 +197,24 @@ body {
 }
 
 .add-favorite {
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.1);
+    width: 140px; /* Match new width */
+    height: 120px; /* Match new height */
+    background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     font-size: 2rem;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.2s;
+    color: #555;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .add-favorite:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: white;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .modal {
@@ -220,16 +236,18 @@ body {
 }
 
 .modal-content {
-    background: #333;
+    background: #fff;
     border-radius: 10px;
     padding: 20px;
     width: 400px;
     max-width: 90%;
+    color: #333;
 }
 
 .modal-title {
     font-size: 1.2rem;
     margin-bottom: 15px;
+    font-weight: bold;
 }
 
 .modal-option {
@@ -245,8 +263,48 @@ body {
     width: 100%;
     padding: 8px;
     border-radius: 5px;
-    border: 1px solid #555;
+    border: 1px solid #ddd;
     background: white;
+}
+
+/* New styles for icon options */
+.icon-options {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.icon-option {
+    margin-bottom: 10px;
+}
+
+.icon-preview {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #f1f1f1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    overflow: hidden;
+    border: 2px solid transparent;
+}
+
+.icon-preview.active {
+    border: 2px solid #4285f4;
+}
+
+.icon-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.icon-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .modal-buttons {
@@ -264,8 +322,8 @@ body {
 }
 
 .modal-btn.cancel {
-    background: #555;
-    color: white;
+    background: #f1f1f1;
+    color: #333;
 }
 
 .modal-btn.save {
