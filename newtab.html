@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новая вкладка</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="content">
+        <div class="time" id="current-time">00:00:00</div>
+        <div class="search-box">
+            <input type="text" placeholder="Поиск в интернете...">
+        </div>
+        <div class="favorites" id="favorites-container">
+            <!-- Favorites will be dynamically inserted here -->
+        </div>
+    </div>
+    
+    <div class="settings" id="settings-btn">⚙️</div>
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-title">Настройки</div>
+        <div class="settings-option">
+            <label>URL фонового изображения:</label>
+            <input type="text" id="background-url" placeholder="Вставьте URL изображения">
+        </div>
+        <div class="settings-option">
+            <label>Загрузить фоновое изображение:</label>
+            <input type="file" id="background-file" accept="image/*">
+        </div>
+    </div>
+    
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-title" id="modal-title">Добавить закладку</div>
+            <div class="modal-option">
+                <label>Название:</label>
+                <input type="text" id="favorite-title" placeholder="Например: Google">
+            </div>
+            <div class="modal-option">
+                <label>URL:</label>
+                <input type="text" id="favorite-url" placeholder="Например: https://google.com">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" id="modal-cancel">Отмена</button>
+                <button class="modal-btn save" id="modal-save">Сохранить</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
