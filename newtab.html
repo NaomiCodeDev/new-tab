@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Новая вкладка</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Text+Me+One&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="content">
-        <div class="time" id="current-time">00:00:00</div>
+        <div class="clock-container">
+            <div class="time" id="current-time">00:00</div>
+            <div class="date" id="current-date"></div>
+        </div>
         <div class="search-box">
             <input type="text" placeholder="Поиск в интернете...">
         </div>
@@ -76,6 +80,12 @@
                 <button class="modal-btn save" id="modal-save">Сохранить</button>
             </div>
         </div>
+    </div>
+    
+    <!-- Context Menu for Right Click -->
+    <div class="context-menu" id="context-menu">
+        <div class="context-menu-item" onclick="handleContextMenuAction('edit')">Редактировать</div>
+        <div class="context-menu-item" onclick="handleContextMenuAction('delete')">Удалить</div>
     </div>
     
     <script src="script.js"></script>

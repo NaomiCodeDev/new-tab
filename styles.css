@@ -22,72 +22,89 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 15vh;
+    margin-top: 10vh; /* Reduced from 15vh */
     width: 100%;
-    max-width: 800px;
+    max-width: 1100px; /* Slightly reduced from 1200px */
+}
+
+/* Add this to your styles.css file */
+.clock-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5.5rem; /* Increased from 1.5rem to create more space */
 }
 
 .time {
-    font-size: 6rem;
-    margin-bottom: 2rem;
+    font-family: 'Text Me One', sans-serif;
+    font-size: 5rem; /* Reduced from 6rem */
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+.date {
+    font-size: 1.3rem; /* Reduced from 1.5rem */
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-top: 0.3rem; /* Reduced from 0.5rem */
+}
+
 .search-box {
-    width: 80%;
-    max-width: 600px;
+    width: 100%;
+    max-width: 1100px;
     position: relative;
-    margin-bottom: 3rem;
+    margin-top: 1rem; /* Added explicit top margin */
+    margin-bottom: 2rem;
 }
 
 .search-box input {
     width: 100%;
-    padding: 15px 20px;
-    border-radius: 50px;
+    padding: 12px 15px; /* Reduced from 15px 20px */
+    border-radius: 8px; /* Reduced from 10px */
     border: none;
     outline: none;
-    font-size: 1.2rem;
+    font-size: 1.1rem; /* Reduced from 1.2rem */
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
 }
 
 .favorites {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Increased width */
-    gap: 20px;
-    width: 90%;
-    max-width: 800px;
+    grid-template-columns: repeat(6, 170px); /* Reduced from 190px */
+    grid-template-rows: repeat(2, auto); /* Changed from 3 to 2 rows */
+    gap: 15px; /* Reduced from 20px */
+    width: 100%;
+    max-width: 1100px; /* Reduced from 1200px */
 }
 
 .favorite-item {
-    background: white; /* Changed to white */
-    border-radius: 10px;
-    padding: 15px;
+    background: white;
+    border-radius: 8px; /* Reduced from 10px */
+    padding: 12px; /* Reduced from 15px */
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
     position: relative;
     transition: transform 0.2s, box-shadow 0.2s;
-    height: 120px; /* Increased height */
+    height: 100px; /* Reduced from 120px */
     user-select: none;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 170px; /* Reduced from 190px */
 }
 
 .favorite-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px); /* Reduced from -5px */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .favorite-icon {
-    width: 48px; /* Increased size */
-    height: 48px; /* Increased size */
+    width: 40px; /* Reduced from 48px */
+    height: 40px; /* Reduced from 48px */
     background: #f1f1f1;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 8px; /* Reduced from 12px */
     font-weight: bold;
     color: #333;
     overflow: hidden;
@@ -100,53 +117,24 @@ body {
 }
 
 .favorite-title {
-    font-size: 1rem;
+    font-size: 0.9rem; /* Reduced from 1rem */
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
-    color: #333; /* Text color for white background */
-}
-
-.controls {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    display: none;
-}
-
-.favorite-item:hover .controls {
-    display: flex;
-}
-
-.control-btn {
-    width: 24px;
-    height: 24px;
-    background: rgba(0, 0, 0, 0.1);
     color: #333;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    margin-left: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.control-btn:hover {
-    background: rgba(0, 0, 0, 0.2);
 }
 
 .settings {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 15px; /* Reduced from 20px */
+    right: 15px; /* Reduced from 20px */
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 40px; /* Reduced from 50px */
+    height: 40px; /* Reduced from 50px */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -160,14 +148,15 @@ body {
 
 .settings-panel {
     position: absolute;
-    top: 80px;
-    right: 20px;
+    top: 60px; /* Reduced from 80px */
+    right: 15px; /* Reduced from 20px */
     background: rgba(33, 33, 33, 0.9);
     backdrop-filter: blur(10px);
-    border-radius: 10px;
-    padding: 20px;
-    width: 300px;
+    border-radius: 8px; /* Reduced from 10px */
+    padding: 15px; /* Reduced from 20px */
+    width: 280px; /* Reduced from 300px */
     display: none;
+    z-index: 100;
 }
 
 .settings-panel.active {
@@ -175,46 +164,81 @@ body {
 }
 
 .settings-title {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+    font-size: 1.1rem; /* Reduced from 1.2rem */
+    margin-bottom: 12px; /* Reduced from 15px */
 }
 
 .settings-option {
-    margin-bottom: 15px;
+    margin-bottom: 12px; /* Reduced from 15px */
 }
 
 .settings-option label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 4px; /* Reduced from 5px */
 }
 
 .settings-option input {
     width: 100%;
-    padding: 8px;
-    border-radius: 5px;
+    padding: 7px; /* Reduced from 8px */
+    border-radius: 4px; /* Reduced from 5px */
     border: 1px solid #555;
     background: rgba(255, 255, 255, 0.8);
 }
 
 .add-favorite {
-    width: 140px; /* Match new width */
-    height: 120px; /* Match new height */
     background: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
+    border-radius: 8px; /* Reduced from 10px */
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1.8rem; /* Reduced from 2rem */
     transition: background 0.2s, transform 0.2s;
     color: #555;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: 100px; /* Reduced from 120px */
+    width: 170px; /* Reduced from 190px */
 }
 
 .add-favorite:hover {
     background: white;
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px); /* Reduced from -5px */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Updated placeholder class for empty tab slots */
+.tab-placeholder {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    height: 100px;
+    width: 170px;
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.tab-placeholder:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.plus-indicator {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.8rem;
+    opacity: 0.6;
+}
+
+.tab-placeholder:hover .plus-indicator {
+    opacity: 1;
+}
+
+/* Remove the dedicated add button styles since we won't need it anymore */
+.add-favorite {
+    display: none;
 }
 
 .modal {
@@ -237,56 +261,56 @@ body {
 
 .modal-content {
     background: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    width: 400px;
+    border-radius: 8px; /* Reduced from 10px */
+    padding: 15px; /* Reduced from 20px */
+    width: 360px; /* Reduced from 400px */
     max-width: 90%;
     color: #333;
 }
 
 .modal-title {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+    font-size: 1.1rem; /* Reduced from 1.2rem */
+    margin-bottom: 12px; /* Reduced from 15px */
     font-weight: bold;
 }
 
 .modal-option {
-    margin-bottom: 15px;
+    margin-bottom: 12px; /* Reduced from 15px */
 }
 
 .modal-option label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 4px; /* Reduced from 5px */
 }
 
 .modal-option input {
     width: 100%;
-    padding: 8px;
-    border-radius: 5px;
+    padding: 7px; /* Reduced from 8px */
+    border-radius: 4px; /* Reduced from 5px */
     border: 1px solid #ddd;
     background: white;
 }
 
-/* New styles for icon options */
+/* Icon options styles */
 .icon-options {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
+    margin-bottom: 12px; /* Reduced from 15px */
 }
 
 .icon-option {
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* Reduced from 10px */
 }
 
 .icon-preview {
-    width: 48px;
-    height: 48px;
+    width: 40px; /* Reduced from 48px */
+    height: 40px; /* Reduced from 48px */
     border-radius: 50%;
     background: #f1f1f1;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 10px;
+    margin-right: 8px; /* Reduced from 10px */
     overflow: hidden;
     border: 2px solid transparent;
 }
@@ -304,19 +328,19 @@ body {
 .icon-group {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* Reduced from 10px */
 }
 
 .modal-buttons {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 8px; /* Reduced from 10px */
+    margin-top: 15px; /* Reduced from 20px */
 }
 
 .modal-btn {
-    padding: 8px 15px;
-    border-radius: 5px;
+    padding: 7px 12px; /* Reduced from 8px 15px */
+    border-radius: 4px; /* Reduced from 5px */
     border: none;
     cursor: pointer;
 }
@@ -329,4 +353,30 @@ body {
 .modal-btn.save {
     background: #4285f4;
     color: white;
+}
+
+/* Context menu */
+.context-menu {
+    position: absolute;
+    background: white;
+    border-radius: 4px; /* Reduced from 5px */
+    padding: 4px 0; /* Reduced from 5px 0 */
+    min-width: 140px; /* Reduced from 150px */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 1000;
+}
+
+.context-menu.active {
+    display: block;
+}
+
+.context-menu-item {
+    padding: 7px 12px; /* Reduced from 8px 15px */
+    cursor: pointer;
+    color: #333;
+}
+
+.context-menu-item:hover {
+    background: #f1f1f1;
 }

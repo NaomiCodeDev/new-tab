@@ -10,6 +10,7 @@ let favorites = [
 
 // DOM elements
 const timeElement = document.getElementById('current-time');
+const dateElement = document.getElementById('current-date');
 const favoritesContainer = document.getElementById('favorites-container');
 const settingsBtn = document.getElementById('settings-btn');
 const settingsPanel = document.getElementById('settings-panel');
@@ -22,6 +23,7 @@ const favoriteUrlInput = document.getElementById('favorite-url');
 const modalCancel = document.getElementById('modal-cancel');
 const modalSave = document.getElementById('modal-save');
 const searchInput = document.querySelector('.search-box input');
+const contextMenu = document.getElementById('context-menu');
 
 // New icon-related DOM elements
 const defaultIcon = document.getElementById('default-icon');
@@ -38,14 +40,27 @@ let editingFavoriteId = null;
 let draggedItem = null;
 let currentIconType = 'default';
 let currentIconData = null;
+let activeContextMenuId = null;
+
+// Maximum number of slots in the grid (6 columns x 3 rows)
+const MAX_SLOTS = 12;
 
 // Update clock
 function updateClock() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+    timeElement.textContent = `${hours}:${minutes}`;
+    
+    // Update the date with day of week, day, month
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    const dayOfWeek = days[now.getDay()];
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    
+    dateElement.textContent = `${dayOfWeek}, ${day} ${month}`;
 }
 
 // Initialize and update clock every second
@@ -89,6 +104,7 @@ function createIconElement(favorite) {
 function renderFavorites() {
     favoritesContainer.innerHTML = '';
     
+    // Render existing favorites
     favorites.forEach(favorite => {
         const favoriteElement = document.createElement('div');
         favoriteElement.className = 'favorite-item';
@@ -98,10 +114,6 @@ function renderFavorites() {
         const iconElement = createIconElement(favorite);
         
         favoriteElement.innerHTML = `
-            <div class="controls">
-                <button class="control-btn edit" onclick="editFavorite(${favorite.id})">✏️</button>
-                <button class="control-btn delete" onclick="deleteFavorite(${favorite.id})">❌</button>
-            </div>
             <div class="favorite-title">${favorite.title}</div>
         `;
         
@@ -109,9 +121,13 @@ function renderFavorites() {
         favoriteElement.insertBefore(iconElement, favoriteElement.firstChild);
         
         favoriteElement.addEventListener('click', (e) => {
-            if (!e.target.closest('.controls')) {
-                window.location.href = favorite.url;
-            }
+            window.location.href = favorite.url;
+        });
+        
+        // Right-click context menu
+        favoriteElement.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            showContextMenu(e, favorite.id);
         });
         
         // Drag events
@@ -123,15 +139,60 @@ function renderFavorites() {
         favoritesContainer.appendChild(favoriteElement);
     });
     
-    // Add the "+" button for adding new favorites
-    const addButton = document.createElement('div');
-    addButton.className = 'add-favorite';
-    addButton.textContent = '+';
-    addButton.addEventListener('click', () => {
-        showAddModal();
-    });
+    // Calculate remaining slots
+    const totalElements = favorites.length;
+    const remainingSlots = MAX_SLOTS - totalElements;
     
-    favoritesContainer.appendChild(addButton);
+    // Add placeholder slots that act as "add new" buttons
+    if (remainingSlots > 0) {
+        for (let i = 0; i < remainingSlots; i++) {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'tab-placeholder';
+            
+            // Add a subtle plus indicator to show it's clickable
+            const plusIndicator = document.createElement('div');
+            plusIndicator.className = 'plus-indicator';
+            plusIndicator.innerHTML = '+';
+            placeholder.appendChild(plusIndicator);
+            
+            // Add click event to open the add modal
+            placeholder.addEventListener('click', () => {
+                showAddModal();
+            });
+            
+            favoritesContainer.appendChild(placeholder);
+        }
+    }
+}
+
+// Show context menu
+function showContextMenu(e, id) {
+    const contextMenu = document.getElementById('context-menu');
+    
+    // Position the menu
+    contextMenu.style.left = `${e.pageX}px`;
+    contextMenu.style.top = `${e.pageY}px`;
+    
+    // Store the active favorite id
+    activeContextMenuId = id;
+    
+    // Show the menu
+    contextMenu.classList.add('active');
+}
+
+// Handle context menu actions
+function handleContextMenuAction(action) {
+    if (!activeContextMenuId) return;
+    
+    if (action === 'edit') {
+        editFavorite(activeContextMenuId);
+    } else if (action === 'delete') {
+        deleteFavorite(activeContextMenuId);
+    }
+    
+    // Hide the menu
+    document.getElementById('context-menu').classList.remove('active');
+    activeContextMenuId = null;
 }
 
 // Drag and drop functionality
@@ -394,7 +455,7 @@ searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         const query = searchInput.value.trim();
         if (query) {
-            window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            window.location.href = `https://yandex.ru/search/?text=${encodeURIComponent(query)}`;
         }
     }
 });
@@ -407,6 +468,11 @@ document.addEventListener('click', (e) => {
     
     if (e.target === editModal) {
         editModal.classList.remove('active');
+    }
+    
+    // Close context menu when clicking outside
+    if (!contextMenu.contains(e.target)) {
+        contextMenu.classList.remove('active');
     }
 });
 
@@ -432,3 +498,4 @@ window.onload = () => {
 // Expose functions to global scope for onclick handlers
 window.editFavorite = editFavorite;
 window.deleteFavorite = deleteFavorite;
+window.handleContextMenuAction = handleContextMenuAction;
