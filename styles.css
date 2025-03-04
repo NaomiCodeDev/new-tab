@@ -57,12 +57,12 @@ body {
 
 .search-box input {
     width: 100%;
-    padding: 12px 15px; /* Reduced from 15px 20px */
-    border-radius: 8px; /* Reduced from 10px */
+    padding: 14px 15px; /* Reduced from 15px 20px */
+    border-radius: 10px; /* Reduced from 10px */
     border: none;
     outline: none;
     font-size: 1.1rem; /* Reduced from 1.2rem */
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 1);
     backdrop-filter: blur(10px);
 }
 
@@ -78,7 +78,7 @@ body {
 /* Update the favorite-item class for better centering */
 .favorite-item {
     background: white;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 12px;
     display: flex;
     flex-direction: column;
@@ -86,13 +86,19 @@ body {
     justify-content: center; /* Add this to center contents vertically */
     cursor: pointer;
     position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s ease, opacity 0.3s ease;
     height: 100px;
     user-select: none;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 170px;
     gap: 8px; /* Add consistent spacing between icon and title */
 }
+
+.favorite-item.dragging {
+    opacity: 0.5;
+    transform: scale(1.05);
+    z-index: 1000;
+  }
 
 .favorite-item:hover {
     transform: translateY(-3px); /* Reduced from -5px */
@@ -224,8 +230,8 @@ body {
 
 /* Updated placeholder class for empty tab slots */
 .tab-placeholder {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
     height: 100px;
     width: 170px;
     backdrop-filter: blur(5px);
@@ -237,9 +243,7 @@ body {
 }
 
 .tab-placeholder:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .plus-indicator {

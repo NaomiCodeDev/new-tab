@@ -59,8 +59,8 @@ function updateClock() {
     timeElement.textContent = `${hours}:${minutes}`;
     
     // Update the date with day of week, day, month
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const days = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+    const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
     
     const dayOfWeek = days[now.getDay()];
     const day = now.getDate();
@@ -237,9 +237,10 @@ function handleContextMenuAction(action) {
     activeContextMenuId = null;
 }
 
-// Drag and drop functionality
+// Existing drag events
 function handleDragStart(e) {
     draggedItem = this;
+    // (Optional: customize drag image as shown earlier)
     setTimeout(() => {
         this.style.opacity = '0.4';
     }, 0);
@@ -250,22 +251,63 @@ function handleDragOver(e) {
     return false;
 }
 
+// NEW: Animate target on dragenter
+function handleDragEnter(e) {
+    if (this !== draggedItem) {
+        this.style.transition = 'transform 0.2s ease';
+        this.style.transform = 'translate(10px, 10px)';
+    }
+}
+
+// NEW: Reset the target on dragleave
+function handleDragLeave(e) {
+    if (this !== draggedItem) {
+        this.style.transition = 'transform 0.2s ease';
+        this.style.transform = '';
+    }
+}
+
+// Existing drop handler with FLIP animation for a smooth rearrange on drop
 function handleDrop(e) {
     e.stopPropagation();
     
     if (draggedItem !== this) {
-        // Get the indexes
+        // Capture initial positions
         const items = Array.from(favoritesContainer.querySelectorAll('.favorite-item'));
-        const fromIndex = items.indexOf(draggedItem);
-        const toIndex = items.indexOf(this);
+        const positions = {};
+        items.forEach(item => {
+            const id = item.getAttribute('data-id');
+            positions[id] = item.getBoundingClientRect();
+        });
         
         // Reorder favorites array
+        const fromIndex = items.indexOf(draggedItem);
+        const toIndex = items.indexOf(this);
         const movedItem = favorites.splice(fromIndex, 1)[0];
         favorites.splice(toIndex, 0, movedItem);
         
-        // Save and render
         saveFavorites();
         renderFavorites();
+        
+        // Animate the new positions
+        const newItems = Array.from(favoritesContainer.querySelectorAll('.favorite-item'));
+        newItems.forEach(item => {
+            const id = item.getAttribute('data-id');
+            const oldRect = positions[id];
+            const newRect = item.getBoundingClientRect();
+            if (oldRect) {
+                const dx = oldRect.left - newRect.left;
+                const dy = oldRect.top - newRect.top;
+                if (dx || dy) {
+                    item.style.transform = `translate(${dx}px, ${dy}px)`;
+                    item.style.transition = 'transform 0s';
+                    requestAnimationFrame(() => {
+                        item.style.transition = 'transform 0.3s ease';
+                        item.style.transform = '';
+                    });
+                }
+            }
+        });
     }
     
     return false;
