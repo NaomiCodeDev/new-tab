@@ -6,17 +6,25 @@
     <title>Новая вкладка</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Text+Me+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kodchasan:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="content">
         <div class="clock-container">
-            <div class="time" id="current-time">00:00</div>
-            <div class="date" id="current-date"></div>
+            <div class="time noselect" id="current-time">00:00</div>
+            <div class="date noselect" id="current-date"></div>
         </div>
         <div class="search-box">
-            <input type="text" placeholder="Введите запрос или адрес">
+            <input type="text" class="noselect" placeholder="Введите запрос или адрес">
+            <div class="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
         </div>
-        <div class="favorites" id="favorites-container">
+        <div class="favorites noselect" id="favorites-container">
             <!-- Favorites will be dynamically inserted here -->
         </div>
     </div>

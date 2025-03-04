@@ -18,12 +18,21 @@ body {
     position: relative;
 }
 
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome, Safari, Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Стандартное свойство */
+  }
+
 .content {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 10vh; /* Reduced from 15vh */
-    width: 100%;
+    /* width: 100%; */
     max-width: 1100px; /* Slightly reduced from 1200px */
 }
 
@@ -36,13 +45,15 @@ body {
 }
 
 .time {
-    font-family: 'Text Me One', sans-serif;
+    font-family: "Kodchasan", sans-serif;
+    font-weight: 200;
     font-size: 5rem; /* Reduced from 6rem */
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .date {
-    font-size: 1.3rem; /* Reduced from 1.5rem */
+    font-family: 'Golos Text', sans-serif;
+    font-size: 1.1rem; /* Reduced from 1.5rem */
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin-top: 0.3rem; /* Reduced from 0.5rem */
 }
@@ -55,7 +66,13 @@ body {
     margin-bottom: 2rem;
 }
 
+.search-box input::placeholder {
+    color: rgb(179, 179, 179) !important;
+    padding-right: 40px; /* Increase to make room for the icon */
+}
+
 .search-box input {
+    font-family: 'Golos Text', sans-serif;
     width: 100%;
     padding: 14px 15px; /* Reduced from 15px 20px */
     border-radius: 10px; /* Reduced from 10px */
@@ -66,12 +83,22 @@ body {
     backdrop-filter: blur(10px);
 }
 
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 56%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: rgb(179, 179, 179);
+    margin-top: -1px; /* Adjust this value until the icon is perfectly centered */
+}
+
 .favorites {
     display: grid;
     grid-template-columns: repeat(6, 170px); /* Reduced from 190px */
     grid-template-rows: repeat(2, auto); /* Changed from 3 to 2 rows */
-    gap: 15px; /* Reduced from 20px */
-    width: 100%;
+    gap: 10px; /* Reduced from 20px */
+    /* width: 100%; */
     max-width: 1100px; /* Reduced from 1200px */
 }
 
@@ -83,26 +110,59 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Add this to center contents vertically */
+    justify-content: center;
     cursor: pointer;
     position: relative;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Improved transition with bouncy effect */
     height: 100px;
     user-select: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 170px;
-    gap: 8px; /* Add consistent spacing between icon and title */
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Initial subtle shadow */
 }
 
 .favorite-item.dragging {
     opacity: 0.5;
     transform: scale(1.05);
     z-index: 1000;
-  }
+}
+
+/* Add these styles to the existing styles.css */
+.tab-placeholder.drag-target {
+    background: rgba(190, 190, 190, 0.25);
+    backdrop-filter: blur(7px);
+}
 
 .favorite-item:hover {
-    transform: translateY(-3px); /* Reduced from -5px */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px) scale(1.02); /* Combine slight scale with lift */
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.1),
+        0 6px 6px rgba(0, 0, 0, 0.08); /* Larger shadow on hover */
+}
+
+/* Add press effect on active state */
+.favorite-item:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition-duration: 0.1s;
+}
+
+/* Optional: Add subtle rotate effect on hover */
+.favorite-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: rotate(0deg);
+    pointer-events: none;
+}
+
+.favorite-item:hover::before {
+    transform: rotate(1deg);
 }
 
 /* Items with no icon should center the text vertically */
@@ -132,9 +192,11 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain; /* Changed from cover to contain */
+    border-radius: 10px;
 }
 
 .favorite-title {
+    font-family: 'Golos Text', sans-serif;
     font-size: 0.9rem;
     text-align: center;
     overflow: hidden;
@@ -168,43 +230,94 @@ body {
     background: rgba(255, 255, 255, 0.3);
 }
 
+/* Settings Panel Refinements */
 .settings-panel {
     position: absolute;
-    top: 60px; /* Reduced from 80px */
-    right: 15px; /* Reduced from 20px */
-    background: rgba(33, 33, 33, 0.9);
-    backdrop-filter: blur(10px);
-    border-radius: 8px; /* Reduced from 10px */
-    padding: 15px; /* Reduced from 20px */
-    width: 280px; /* Reduced from 300px */
+    top: 60px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    padding: 20px;
+    width: 320px;
+    box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.05);
     display: none;
     z-index: 100;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: 
+        opacity 0.3s ease, 
+        transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+    overflow: hidden;
 }
 
 .settings-panel.active {
     display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .settings-title {
-    font-size: 1.1rem; /* Reduced from 1.2rem */
-    margin-bottom: 12px; /* Reduced from 15px */
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    position: relative;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
 }
 
 .settings-option {
-    margin-bottom: 12px; /* Reduced from 15px */
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .settings-option label {
-    display: block;
-    margin-bottom: 4px; /* Reduced from 5px */
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+    font-size: 0.95rem;
 }
 
-.settings-option input {
+.settings-option input[type="text"],
+.settings-option input[type="file"] {
     width: 100%;
-    padding: 7px; /* Reduced from 8px */
-    border-radius: 4px; /* Reduced from 5px */
-    border: 1px solid #555;
-    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.7);
+    transition: 
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.settings-option input[type="text"]:focus,
+.settings-option input[type="file"]:focus {
+    border-color: #4285f4;
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+    outline: none;
+}
+
+.settings-option input[type="file"] {
+    cursor: pointer;
+}
+
+/* Hover and focus states */
+.settings-option input:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .settings-panel {
+        width: calc(100% - 30px);
+        right: 15px;
+        top: 70px;
+    }
 }
 
 .add-favorite {

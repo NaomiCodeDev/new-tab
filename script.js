@@ -39,6 +39,7 @@ const iconSettings = document.getElementById('icon-settings');
 const tabColorInput = document.getElementById('tab-color');
 const colorPreview = document.getElementById('color-preview');
 
+
 // Variables for editing
 let editingFavoriteId = null;
 let draggedItem = null;
@@ -117,7 +118,7 @@ function renderFavorites() {
     // Render existing favorites
     favorites.forEach(favorite => {
         const favoriteElement = document.createElement('div');
-        favoriteElement.className = 'favorite-item';
+        favoriteElement.className = 'favorite-item noselect';
         favoriteElement.setAttribute('draggable', 'true');
         favoriteElement.setAttribute('data-id', favorite.id);
         
@@ -237,12 +238,17 @@ function handleContextMenuAction(action) {
     activeContextMenuId = null;
 }
 
-// Existing drag events
+// Modify existing drag event handlers
 function handleDragStart(e) {
     draggedItem = this;
-    // (Optional: customize drag image as shown earlier)
     setTimeout(() => {
         this.style.opacity = '0.4';
+        
+        // Add drag-target class to placeholders
+        const placeholders = document.querySelectorAll('.tab-placeholder');
+        placeholders.forEach(placeholder => {
+            placeholder.classList.add('drag-target');
+        });
     }, 0);
 }
 
@@ -315,6 +321,12 @@ function handleDrop(e) {
 
 function handleDragEnd(e) {
     this.style.opacity = '1';
+    
+    // Remove drag-target class from placeholders
+    const placeholders = document.querySelectorAll('.tab-placeholder');
+    placeholders.forEach(placeholder => {
+        placeholder.classList.remove('drag-target');
+    });
 }
 
 // Reset icon selection in modal
