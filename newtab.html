@@ -46,33 +46,50 @@
                 <input type="text" id="favorite-url" placeholder="Например: https://google.com">
             </div>
             
-            <!-- New Icon Options Section -->
+            <!-- Icon Options Section with Show Icon Toggle -->
             <div class="icon-options">
-                <label>Иконка:</label>
-                <div class="icon-option">
-                    <div class="icon-group">
-                        <div class="icon-preview active" id="default-icon">
-                            <span id="default-icon-letter">G</span>
+                <div class="modal-option">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="show-icon" checked>
+                        Показывать иконку
+                    </label>
+                </div>
+                
+                <!-- Only show these options when show-icon is checked -->
+                <div id="icon-settings">
+                    <label>Иконка:</label>
+                    <div class="icon-option">
+                        <div class="icon-group">
+                            <div class="icon-preview active" id="default-icon">
+                                <span id="default-icon-letter">G</span>
+                            </div>
+                            <span>Буква по умолчанию</span>
                         </div>
-                        <span>Буква по умолчанию</span>
+                    </div>
+                    <div class="icon-option">
+                        <div class="icon-group">
+                            <div class="icon-preview" id="custom-icon-preview">
+                                <img id="icon-preview-img" src="" style="display: none;">
+                            </div>
+                            <input type="file" id="custom-icon" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="icon-option">
+                        <div class="icon-group">
+                            <div class="icon-preview" id="url-icon-preview">
+                                <img id="url-icon-img" src="" style="display: none;">
+                            </div>
+                            <input type="text" id="icon-url" placeholder="URL изображения для иконки">
+                        </div>
                     </div>
                 </div>
-                <div class="icon-option">
-                    <div class="icon-group">
-                        <div class="icon-preview" id="custom-icon-preview">
-                            <img id="icon-preview-img" src="" style="display: none;">
-                        </div>
-                        <input type="file" id="custom-icon" accept="image/*">
-                    </div>
-                </div>
-                <div class="icon-option">
-                    <div class="icon-group">
-                        <div class="icon-preview" id="url-icon-preview">
-                            <img id="url-icon-img" src="" style="display: none;">
-                        </div>
-                        <input type="text" id="icon-url" placeholder="URL изображения для иконки">
-                    </div>
-                </div>
+            </div>
+            
+            <!-- Tab Color Option -->
+            <div class="modal-option">
+                <label>Цвет вкладки:</label>
+                <input type="color" id="tab-color" value="#FFFFFF">
+                <div class="color-preview" id="color-preview"></div>
             </div>
             
             <div class="modal-buttons">

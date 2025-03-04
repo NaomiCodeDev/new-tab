@@ -1,11 +1,11 @@
 // Initial favorites data
 let favorites = [
-    { id: 1, title: 'Google', url: 'https://google.com', iconType: 'default', iconData: null },
-    { id: 2, title: 'YouTube', url: 'https://youtube.com', iconType: 'default', iconData: null },
-    { id: 3, title: 'Facebook', url: 'https://facebook.com', iconType: 'default', iconData: null },
-    { id: 4, title: 'Twitter', url: 'https://twitter.com', iconType: 'default', iconData: null },
-    { id: 5, title: 'Instagram', url: 'https://instagram.com', iconType: 'default', iconData: null },
-    { id: 6, title: 'LinkedIn', url: 'https://linkedin.com', iconType: 'default', iconData: null }
+    { id: 1, title: 'Google', url: 'https://google.com', iconType: 'default', iconData: null, showIcon: true, tabColor: '#FFFFFF' },
+    { id: 2, title: 'YouTube', url: 'https://youtube.com', iconType: 'default', iconData: null, showIcon: true, tabColor: '#FFFFFF' },
+    { id: 3, title: 'Facebook', url: 'https://facebook.com', iconType: 'default', iconData: null, showIcon: true, tabColor: '#FFFFFF' },
+    { id: 4, title: 'Twitter', url: 'https://twitter.com', iconType: 'default', iconData: null, showIcon: true, tabColor: '#FFFFFF' },
+    { id: 5, title: 'Instagram', url: 'https://instagram.com', iconType: 'default', iconData: null, showIcon: true, tabColor: '#FFFFFF' },
+    { id: 6, title: 'LinkedIn', url: 'https://linkedin.com', iconType: 'default', iconData: null, showIcon: true, tabColor: '#FFFFFF' }
 ];
 
 // DOM elements
@@ -25,7 +25,7 @@ const modalSave = document.getElementById('modal-save');
 const searchInput = document.querySelector('.search-box input');
 const contextMenu = document.getElementById('context-menu');
 
-// New icon-related DOM elements
+// New and updated DOM elements
 const defaultIcon = document.getElementById('default-icon');
 const defaultIconLetter = document.getElementById('default-icon-letter');
 const customIconInput = document.getElementById('custom-icon');
@@ -34,6 +34,10 @@ const customIconPreviewImg = document.getElementById('icon-preview-img');
 const iconUrlInput = document.getElementById('icon-url');
 const urlIconPreview = document.getElementById('url-icon-preview');
 const urlIconImg = document.getElementById('url-icon-img');
+const showIconCheckbox = document.getElementById('show-icon');
+const iconSettings = document.getElementById('icon-settings');
+const tabColorInput = document.getElementById('tab-color');
+const colorPreview = document.getElementById('color-preview');
 
 // Variables for editing
 let editingFavoriteId = null;
@@ -41,6 +45,8 @@ let draggedItem = null;
 let currentIconType = 'default';
 let currentIconData = null;
 let activeContextMenuId = null;
+let showIcon = true;
+let currentTabColor = '#FFFFFF';
 
 // Maximum number of slots in the grid (6 columns x 3 rows)
 const MAX_SLOTS = 12;
@@ -81,8 +87,12 @@ function saveFavorites() {
     localStorage.setItem('favorites', JSON.stringify(favorites));
 }
 
-// Create icon based on type and data
+// Create icon based on type and data and showIcon setting
 function createIconElement(favorite) {
+    if (!favorite.showIcon) {
+        return null; // Return null if icon should not be shown
+    }
+    
     const iconContainer = document.createElement('div');
     iconContainer.className = 'favorite-icon';
     
@@ -111,15 +121,37 @@ function renderFavorites() {
         favoriteElement.setAttribute('draggable', 'true');
         favoriteElement.setAttribute('data-id', favorite.id);
         
+        // Set tab color from favorite properties
+        favoriteElement.style.backgroundColor = favorite.tabColor || '#FFFFFF';
+        
+        // Adjust text color based on background color
+        const bgColor = favorite.tabColor || '#FFFFFF';
+        const isDark = isColorDark(bgColor);
+        
+        // Add title element with proper styling
+        const titleElement = document.createElement('div');
+        titleElement.className = 'favorite-title';
+        titleElement.textContent = favorite.title;
+        titleElement.style.color = isDark ? '#FFFFFF' : '#333333';
+        
+        // Add icon if showIcon is true
         const iconElement = createIconElement(favorite);
         
-        favoriteElement.innerHTML = `
-            <div class="favorite-title">${favorite.title}</div>
-        `;
+        // Structure the favorite item
+        if (iconElement) {
+            // Insert the icon at the beginning
+            favoriteElement.appendChild(iconElement);
+        }
         
-        // Insert the icon at the beginning
-        favoriteElement.insertBefore(iconElement, favoriteElement.firstChild);
+        // Add the title element
+        favoriteElement.appendChild(titleElement);
         
+        // Center the title if there's no icon
+        if (!iconElement) {
+            favoriteElement.classList.add('no-icon');
+        }
+        
+        // Click event to navigate to URL
         favoriteElement.addEventListener('click', (e) => {
             window.location.href = favorite.url;
         });
@@ -149,11 +181,7 @@ function renderFavorites() {
             const placeholder = document.createElement('div');
             placeholder.className = 'tab-placeholder';
             
-            // Add a subtle plus indicator to show it's clickable
-            const plusIndicator = document.createElement('div');
-            plusIndicator.className = 'plus-indicator';
-            plusIndicator.innerHTML = '+';
-            placeholder.appendChild(plusIndicator);
+            // Remove plus indicator as requested
             
             // Add click event to open the add modal
             placeholder.addEventListener('click', () => {
@@ -163,6 +191,20 @@ function renderFavorites() {
             favoritesContainer.appendChild(placeholder);
         }
     }
+}
+
+// Function to determine if a color is dark
+function isColorDark(hexColor) {
+    // Convert hex to RGB
+    const r = parseInt(hexColor.slice(1, 3), 16);
+    const g = parseInt(hexColor.slice(3, 5), 16);
+    const b = parseInt(hexColor.slice(5, 7), 16);
+    
+    // Calculate brightness (using a common formula)
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    
+    // Return true if the color is dark
+    return brightness < 128;
 }
 
 // Show context menu
@@ -252,6 +294,33 @@ function resetIconSelection() {
     // Reset current selection
     currentIconType = 'default';
     currentIconData = null;
+    
+    // Reset tab color
+    tabColorInput.value = '#FFFFFF';
+    colorPreview.style.backgroundColor = '#FFFFFF';
+    currentTabColor = '#FFFFFF';
+    
+    // Reset showIcon
+    showIconCheckbox.checked = true;
+    showIcon = true;
+    iconSettings.style.display = 'block';
+}
+
+// Toggle icon settings visibility based on checkbox
+function toggleIconSettings() {
+    if (showIconCheckbox.checked) {
+        iconSettings.style.display = 'block';
+        showIcon = true;
+    } else {
+        iconSettings.style.display = 'none';
+        showIcon = false;
+    }
+}
+
+// Update color preview
+function updateColorPreview() {
+    colorPreview.style.backgroundColor = tabColorInput.value;
+    currentTabColor = tabColorInput.value;
 }
 
 // Add a new favorite
@@ -274,6 +343,16 @@ function editFavorite(id) {
         favoriteTitleInput.value = favorite.title;
         favoriteUrlInput.value = favorite.url;
         editingFavoriteId = id;
+        
+        // Set show icon checkbox
+        showIconCheckbox.checked = favorite.showIcon !== false;
+        showIcon = favorite.showIcon !== false;
+        toggleIconSettings();
+        
+        // Set tab color
+        tabColorInput.value = favorite.tabColor || '#FFFFFF';
+        colorPreview.style.backgroundColor = favorite.tabColor || '#FFFFFF';
+        currentTabColor = favorite.tabColor || '#FFFFFF';
         
         // Set icon type and preview
         resetIconSelection();
@@ -329,7 +408,9 @@ function saveFavorite() {
         title,
         url,
         iconType: currentIconType,
-        iconData: currentIconData
+        iconData: currentIconData,
+        showIcon: showIcon,
+        tabColor: currentTabColor
     };
     
     if (currentIconType === 'default') {
@@ -367,6 +448,12 @@ defaultIcon.addEventListener('click', () => {
     const title = favoriteTitleInput.value.trim();
     defaultIconLetter.textContent = title ? title.charAt(0) : 'A';
 });
+
+// Show/hide icon settings when checkbox changes
+showIconCheckbox.addEventListener('change', toggleIconSettings);
+
+// Update color preview when color input changes
+tabColorInput.addEventListener('input', updateColorPreview);
 
 // Update default icon letter when title changes
 favoriteTitleInput.addEventListener('input', () => {
